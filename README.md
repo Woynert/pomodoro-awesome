@@ -1,9 +1,28 @@
 # Pomodoro Widget
 
+### Now with sounds!
+
+Forked off francois2metz: still 99% his original code.
+
+Sounds downloaded from: http://www.grsites.com, and claim to be:
+
+  The background textures, fonts and sound effects found on this site
+  were not created by GRSites, but were obtained from various sources
+  on the internet that described these graphics as freeware. They are
+  free to use for personal and commercial use.
+
+
+
 ## Usage
 
+Requires mpg321 to play the sounds.
+
+    sudo apt-get install mpg321
+
+Then
+
     cd ~/.config/awesome
-    git clone git://github.com/francois2metz/pomodoro-awesome.git pomodoro
+    git clone git://github.com/danverbraganza/pomodoro-awesome.git pomodoro
 
 In you rc.lua:
 
