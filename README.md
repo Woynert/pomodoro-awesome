@@ -23,6 +23,15 @@ mywibox[s].widgets = {
 }
 ```
 
+Add it to keybinding
+
+```lua
+    awful.key({modkey, "Shift"}, "p",
+        function()
+            pomodoro:toggle()
+        end, {description = "Toggle Pomodoro", group = "Applications"}),
+```
+
 ## Customization
 
 If you want change the default icon, you can use beautiful:
