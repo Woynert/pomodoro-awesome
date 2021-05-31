@@ -3,7 +3,7 @@
 ## Usage
 
     cd ~/.config/awesome
-    git clone git://github.com/francois2metz/pomodoro-awesome.git pomodoro
+    git clone git://github.com/zbioe/pomodoro-awesome.git pomodoro
 
 In you rc.lua:
 
@@ -23,20 +23,31 @@ mywibox[s].widgets = {
 }
 ```
 
-Add it to keybinding
+Add toggle pomodoro to keybinding
 
 ```lua
-    awful.key({modkey, "Shift"}, "p",
-        function()
-            pomodoro:toggle()
-        end, {description = "Toggle Pomodoro", group = "Applications"}),
+awful.key({modkey, "Shift"}, "p",
+    function()
+        pomodoro:toggle()
+    end, {description = "Toggle Pomodoro", group = "Applications"}),
+```
+
+Add status pomodoro to keybinding
+
+```lua
+awful.key({modkey, "Shift"}, "p",
+    function()
+        pomodoro:status()
+    end, {description = "Status Pomodoro", group = "Applications"}),
 ```
 
 ## Customization
 
 If you want change the default icon, you can use beautiful:
 
-    beautiful.pomodoro_icon = '/your/path/to/pomodoro/icon'
+    beautiful.pomodoro_icon_none = '/your/path/to/pomodoro/icon'
+    beautiful.pomodoro_icon_start = '/your/path/to/pomodoro/icon'
+    beautiful.pomodoro_icon_end = '/your/path/to/pomodoro/icon'
 
 ## License
 
