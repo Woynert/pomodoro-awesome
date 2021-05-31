@@ -69,7 +69,7 @@ pomodoro_tooltip = awful.tooltip({
                                                      end,
 })
 
-local function pomodoro_start_timer()
+function pomodoro:toggle()
    if not pomodoro_timer.started then
       pomodoro_start()
       pomodoro_notify('Started')
@@ -80,7 +80,7 @@ local function pomodoro_start_timer()
 end
 
 pomodoro:buttons(awful.util.table.join(
-                    awful.button({ }, 1, pomodoro_start_timer)
+                   awful.button({ }, 1, pomodoro.toggle)
               ))
 
 return pomodoro
