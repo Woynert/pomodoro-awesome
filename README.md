@@ -35,7 +35,7 @@ awful.key({modkey, "Shift"}, "p",
 Add status pomodoro to keybinding
 
 ```lua
-awful.key({modkey, "Shift"}, "p",
+awful.key({modkey, "Shift"}, "s",
     function()
         pomodoro:status()
     end, {description = "Status Pomodoro", group = "Applications"}),
