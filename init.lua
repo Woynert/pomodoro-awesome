@@ -1,4 +1,6 @@
 -- Author: François de Metz
+-- Author: Danver Braganza
+
 
 local awful        = require("awful")
 local naughty      = require("naughty")
@@ -16,6 +18,13 @@ local pomodoro_image_start = beautiful.pomodoro_icon_start
 local pomodoro_image_end = beautiful.pomodoro_icon_end
   or awful.util.getdir("config") .."/pomodoro/images/red.png"
 
+local windup_path = beautiful.pomodoro_windup or awful.util.getdir("config") .."/pomodoro/winding_clock.mp3"
+
+local ticking_path = beautiful.pomodoro_ticking or awful.util.getdir("config") .."/pomodoro/ticking_clock.mp3"
+
+local ringing_path = beautiful.pomodoro_ringing or awful.util.getdir("config") .."/pomodoro/ringing_clock.mp3"
+
+
 -- setup widget
 local pomodoro = wibox.widget({
     image = pomodoro_image_none,
@@ -24,6 +33,7 @@ local pomodoro = wibox.widget({
 
 -- setup timers
 local pomodoro_timer         = gears.timer({ timeout = pomodoro_time })
+local pomodoro_ticker = timer({ timeout = 3.5 })
 local pomodoro_tooltip_timer = gears.timer({ timeout = 1 })
 local pomodoro_nbsec         = 0
 
@@ -32,7 +42,17 @@ local function pomodoro_start()
   pomodoro_tooltip_timer:start()
   pomodoro.bg = beautiful.bg_normal
   pomodoro.image = pomodoro_image_start
+  pomodoro_ticker:start()
+  awful.util.spawn_with_shell("mpg123 " .. windup_path)
 end
+
+local function pomodoro_tick()
+      if not (pomodoro_nbsec == 0) then
+            awful.util.spawn_with_shell("mpg123 " .. ticking_path)
+            pomodoro_ticker:start()
+      end
+end
+
 
 local function pomodoro_stop()
   pomodoro_timer:stop(pomodoro_timer)
@@ -45,6 +65,7 @@ local function pomodoro_end()
   pomodoro_stop()
   pomodoro.bg = beautiful.bg_urgent
   pomodoro.image = pomodoro_image_end
+  awful.util.spawn_with_shell("mpg123 " .. ringing_path)
 end
 
 local function pomodoro_notify(text)
@@ -73,6 +94,11 @@ local function timer_status()
     return 'pomodoro not started'
   end
 end
+
+pomodoro_ticker:connect_signal("timeout", function(c)
+				          pomodoro_tick()
+					  end)
+
 
 pomodoro_tooltip = awful.tooltip({
     objects = { pomodoro },
