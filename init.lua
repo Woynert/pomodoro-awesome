@@ -8,8 +8,9 @@ local beautiful    = require("beautiful")
 local wibox        = require("wibox")
 local gears        = require("gears")
 
--- 25 min
-local pomodoro_time = 25 * 60
+local pomodoro_time = 25 * 60 -- 25 min
+local rest_time     = 5 * 60 -- 5 min
+local current_time  = pomodoro_time
 
 local pomodoro_image_none = beautiful.pomodoro_icon_none
   or awful.util.getdir("config") .."/pomodoro/images/gray.png"
@@ -29,7 +30,7 @@ local pomodoro = wibox.widget({
 })
 
 -- setup timers
-local pomodoro_timer         = gears.timer({ timeout = pomodoro_time })
+local pomodoro_timer         = gears.timer({ timeout = current_time })
 local pomodoro_tooltip_timer = gears.timer({ timeout = 1 })
 local pomodoro_nbsec         = 0
 
@@ -75,8 +76,8 @@ end)
 
 local function timer_status()
   if pomodoro_timer.started then
-    r = (pomodoro_time - pomodoro_nbsec) % 60
-    return 'End in ' .. math.floor((pomodoro_time - pomodoro_nbsec) / 60) .. ' min ' .. r
+    r = (current_time - pomodoro_nbsec) % 60
+    return 'End in ' .. math.floor((current_time - pomodoro_nbsec) / 60) .. ' min ' .. r
   else
     return 'pomodoro not started'
   end
@@ -88,7 +89,7 @@ pomodoro_tooltip = awful.tooltip({
     timer_function = timer_status,
 })
 
-function pomodoro:toggle()
+local function toggle()
   if not pomodoro_timer.started then
     pomodoro_start()
     pomodoro_notify('Started')
@@ -98,12 +99,25 @@ function pomodoro:toggle()
   end
 end
 
+function pomodoro:toggle_pomodoro()
+  current_time = pomodoro_time
+  pomodoro_timer.timeout = current_time
+  toggle()
+end
+
+function pomodoro:toggle_rest()
+  current_time = rest_time
+  pomodoro_timer.timeout = current_time
+  toggle()
+end
+
 function pomodoro:status()
     pomodoro_notify(timer_status())
 end
 
 pomodoro:buttons(awful.util.table.join(
-                   awful.button({ }, 1, pomodoro.toggle)
+                   awful.button({ }, 1, pomodoro.toggle_pomodoro), -- left click
+                   awful.button({ }, 3, pomodoro.toggle_rest) -- right click
 ))
 
 return pomodoro
